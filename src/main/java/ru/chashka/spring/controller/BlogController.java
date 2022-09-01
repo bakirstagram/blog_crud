@@ -1,6 +1,5 @@
 package ru.chashka.spring.controller;
 
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -10,9 +9,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import ru.chashka.spring.model.Post;
 import ru.chashka.spring.repository.PostRepository;
-
-import java.util.ArrayList;
-import java.util.Optional;
 
 @Controller
 public class BlogController {
@@ -38,7 +34,6 @@ public class BlogController {
                               @RequestParam(value = "anons") String anons,
                               @RequestParam(value = "full_text") String full_text,
                               Model model) {
-        // с помощью аннотаций @RequestParam мы получаем данные из формы который связан с этим action(действием)
         Post post = new Post(title, anons, full_text);
         postRepository.save(post);
         return "redirect:/blog/";
@@ -49,10 +44,6 @@ public class BlogController {
         if (!postRepository.existsById(id)) {
             return "redirect:/blog";
         }
-//                  Версия Дударя
-//        Optional<Post> post = postRepository.findById(id);
-//        ArrayList<Post> result = new ArrayList<>();
-//        post.ifPresent(result::add);
 
         Post post = postRepository.findById(id).orElse(null);
         model.addAttribute("post", post);
@@ -84,6 +75,7 @@ public class BlogController {
         return "redirect:/blog";
 
     }
+
     @PostMapping("/blog/{id}/remove")
     public String blogPostRemove(@PathVariable("id") Long id, Model model) {
         Post post = postRepository.findById(id).orElseThrow();
@@ -91,6 +83,4 @@ public class BlogController {
         return "redirect:/blog";
 
     }
-
-
 }
